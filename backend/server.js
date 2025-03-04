@@ -3,6 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const connectDB = require("./config/db");
+//const seedAdmins = require("./adminAccounts")
 
 const authRoutes = require("./routes/authRoutes");
 
@@ -20,6 +21,7 @@ app.use("/api/auth", authRoutes);
 connectDB();
 
 app.get("/", (req, res) => {
+  //seedAdmins();
   res.send("API is running...");
 });
 

@@ -1,4 +1,6 @@
+require("dotenv").config();
 const mongoose = require("mongoose");
+//import seedAdmins from "../adminAccounts"
 
 const connectDB = async () => {
   try {
@@ -6,6 +8,7 @@ const connectDB = async () => {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
+    //seedAdmins();
     console.log("MongoDB Connected...");
   } catch (error) {
     console.error(error);
