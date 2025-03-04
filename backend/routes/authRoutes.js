@@ -100,7 +100,7 @@ try {
   const { email, password } = req.body;
 
   // Check if the admin exists
-  const admin = await User.findOne({role: "admin" });
+  const admin = await User.findOne({email, role: "admin" });
   if (!admin) {
     return res.status(404).json({ message: "Admin not found" });
   }
