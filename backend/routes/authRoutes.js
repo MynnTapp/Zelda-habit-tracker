@@ -54,7 +54,7 @@ router.post("/login", async (req, res) => {
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
 
-    res.json({ message: "Login successful", user: { id: user._id, email: user.email } });
+    res.json({ message: "Login successful", user: { id: user._id, email: user.email, username: user.username } });
   } catch (error) {
     res.status(500).json({ message: "Server error" });
   }
@@ -62,12 +62,14 @@ router.post("/login", async (req, res) => {
 
 
 router.get("/me", authMiddleware, async (req, res) => {
+
   try {
-    res.json({ userId: req.user.id });
+    res.json({ userId: req.user._id, username: req.user.username, first_name: req.user.first_name, last_name: req.user.last_name, email: req.user.email});
   } catch (error) {
     res.status(500).json({ message: "Server error" });
   }
 });
+
 
 router.post("/logout", (req, res) => {
   res.cookie("token", "", { httpOnly: true, expires: new Date(0) });
