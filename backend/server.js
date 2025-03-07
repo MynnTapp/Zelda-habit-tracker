@@ -6,6 +6,7 @@ const connectDB = require("./config/db");
 //const seedAdmins = require("./adminAccounts")
 
 const authRoutes = require("./routes/authRoutes");
+const habitRoutes = require("./routes/habitRoutes")
 
 const app = express();
 
@@ -16,6 +17,7 @@ app.use(cookieParser());
 
 // Routes
 app.use("/api/auth", authRoutes);
+app.use("/api/auth", habitRoutes);
 
 // Connect to MongoDB
 connectDB();
