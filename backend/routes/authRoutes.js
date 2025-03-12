@@ -3,6 +3,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const {authMiddleware, adminMiddleware} = require("../middleware/authMiddleWare");
+const {blacklistedTokens} = require("../blacklistedtokens")
 
 
 const router = express.Router();
@@ -134,5 +135,56 @@ try {
 
 });
 
+
+router.get("/users", adminMiddleware, async (req, res) =>{
+  try{
+const users = await User.find();
+res.status(200).json(users)
+  } catch (error) {
+    res.status(500).json({message: "could not retrieve users"})
+  }
+})
+
+router.post("/admin/logout", adminMiddleware, (req, res) =>{
+  
+
+  // if (token) {
+  //   blacklistedTokens.add(token); // Add token to the blacklist
+  // }
+
+  // res.json({ message: "Admin Logged out successfully" });
+
+const token = req.header("Authorization")?.replace("Bearer ", "");
+
+if (!token) {
+  return res.status(400).json({ message: "No token provided" });
+}
+
+blacklistedTokens.add(token); // Add token to blacklist
+console.log("Blacklisted Tokens:", blacklistedTokens); // Debugging
+
+res.clearCookie("token"); // Ensure token is removed from cookies
+res.json({ message: "Admin logged out successfully" });
+
+})
+
+router.get("/admin/me", adminMiddleware, async (req, res) =>{
+  try {
+    const admin = await User.findById(req.user.id); // Use the logged-in admin ID
+
+    if (!admin) {
+      return res.status(404).json({ message: "Admin not found" });
+    }
+
+    res.json({
+      id: admin._id,
+      username: admin.username,
+      first_name: admin.first_name,
+      last_name: admin.last_name,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+})
 
 module.exports = router;

@@ -23,7 +23,7 @@ router.post("/habits", authMiddleware, async (req, res) =>{
     }
 } )
 
-//logging habits
+//logging habits dates
 
 router.put("/habits/:habitId/complete", authMiddleware, async (req, res) =>{
     const userId = req.user.id;
@@ -45,25 +45,38 @@ if(alreadyCompleted){
     res.json({message: "You already completed your habit for the day!"})
 }
 
-habit.completedDates.push({date: completedDate});
+habit.completedDates.push(completedDate);
 await habit.save();
 res.status(200).json({message: "habit completed!", habit})
     } catch (error){
-         //const habit = await Habit.findOne({ _id: habitId, userId });
+         const habit = await Habit.findOne({ _id: habitId, userId });
 
-        //console.log(habit.completedDates)
+        console.log(habit.completedDates)
         res.status(500).json({error: error.message})
     }
 })
 
-//Get a users habit
+//Get a users habits
 
 router.get("/users/:userId/habits", authMiddleware, async (req, res) =>{
+    const {userId} = req.params
     try{
-        const habits = Habit.find({userId: req.params.userId})
+        const habits = await Habit.find({id: userId.id})
         res.status(200).json(habits);
     } catch(error){
+        
         res.status(500).json({error: error.message})
+    }
+})
+
+
+router.delete("/habits/:habitId", authMiddleware, async (req, res) =>{
+    const {habitId} = req.params;
+    try{
+        const habit = await Habit.deleteOne({_id: habitId})
+        res.status(200).json({message:"habit successfully deleted"}, habit)
+    } catch(error) {
+        res.status(500).json({message: error.message})
     }
 })
 
