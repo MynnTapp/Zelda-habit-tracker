@@ -7,21 +7,28 @@ console.log(blacklistedTokens)
 
 // Middleware to verify JWT and user role
 const authMiddleware = async (req, res, next) => {
-  try {
-    const token = req.cookies.token; 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findOne({ _id: decoded.id });
+   try {
+     const token = req.cookies.token;
 
+     // If no token, return { user: null }
+     if (!token) {
+       return res.status(200).json({ user: null });
+     }
 
-    if (!user) {
-      throw new Error();
-    }
+     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    req.user = user;
-    next();
-  } catch (e) {
-    res.status(401).send("Please authenticate");
-  }
+     // Find user in DB
+     const user = await User.findOne({ _id: decoded.id });
+
+     if (!user) {
+       return res.status(200).json({ user: null });
+     }
+
+     req.user = user;
+     next();
+   } catch (e) {
+     return res.status(200).json({ user: null });
+   }
 };
 
 // Middleware to check if user is admin

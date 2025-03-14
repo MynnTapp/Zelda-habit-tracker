@@ -3,7 +3,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const {authMiddleware, adminMiddleware} = require("../middleware/authMiddleWare");
-const {blacklistedTokens} = require("../blacklistedtokens")
+const {blacklistedTokens, userblacklistedTokens} = require("../blacklistedtokens")
 
 
 const router = express.Router();
@@ -63,18 +63,32 @@ router.post("/login", async (req, res) => {
 
 
 router.get("/me", authMiddleware, async (req, res) => {
-
-  try {
-    res.json({ userId: req.user._id, username: req.user.username, first_name: req.user.first_name, last_name: req.user.last_name, email: req.user.email});
-  } catch (error) {
-    res.status(500).json({ message: "Server error" });
+  if (!req.user) {
+    return res.status(200).json({ user: null });
   }
+
+  res.json({
+    userId: req.user._id,
+    username: req.user.username,
+    first_name: req.user.first_name,
+    last_name: req.user.last_name,
+    email: req.user.email,
+  });
 });
 
 
 router.post("/logout", authMiddleware, (req, res) => {
-  res.cookie("token", "", { httpOnly: true, expires: new Date(0) });
-  res.json({ message: "Logged out successfully" });
+  const token = req.header("Authorization")?.replace("Bearer ", "");
+
+  if (!token) {
+    return res.status(400).json({ message: "No token provided" });
+  }
+
+  userblacklistedTokens.add(token); // Add token to blacklist
+  console.log("Blacklisted Tokens:", userblacklistedTokens); // Debugging
+
+  res.clearCookie("token"); // Ensure token is removed from cookies
+  res.json({ message: "user logged out successfully" });
 });
 
 

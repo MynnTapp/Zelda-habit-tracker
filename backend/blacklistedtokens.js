@@ -1,4 +1,7 @@
 const blacklistedTokens = new Set();
 //console.log(blacklistedTokens)
 
-module.exports = {blacklistedTokens}
+
+const userblacklistedTokens = new Set();
+
+module.exports = {blacklistedTokens, userblacklistedTokens}
