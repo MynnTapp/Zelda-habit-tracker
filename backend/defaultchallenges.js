@@ -13,25 +13,27 @@ async function seedChallenges() {
       title: "Sum of Two Numbers",
       description: "Write a function that returns the sum of two numbers.",
       difficulty: "Easy",
-      codesnippet: "function sum(a, b) { return a + b; }",
-      solutions: ["function sum(a, b) { return a + b; }"],
-      rewards: { rupees: 10, xp: 5 },
+      //solution: "public static int Sum(int a, int b) => a + b;",
+      codesnippet: "",
+      solutions: ["public static int Sum(int a, int b) => a + b;"],
+      rewards: { xp: 10, coins: 5 },
     },
     {
       title: "Check Even or Odd",
       description: "Write a function that checks if a number is even or odd.",
       difficulty: "Easy",
-      codesnippet: "function isEven(n) { return n % 2 === 0; }",
-      solutions: ["function isEven(n) { return n % 2 === 0; }"],
-      rewards: { rupees: 10, xp: 5 },
+      codesnippet: "",
+      solutions: ["public static bool IsEven(int n) => n % 2 == 0;"],
+      rewards: { xp: 10, coins: 5 },
     },
     {
       title: "Convert Celsius to Fahrenheit",
       description: "Write a function to convert Celsius to Fahrenheit.",
       difficulty: "Easy",
-      codesnippet: "function celsiusToFahrenheit(c) { return (c * 9/5) + 32; }",
-      solutions: ["function celsiusToFahrenheit(c) { return (c * 9/5) + 32; }"],
-      rewards: { rupees: 10, xp: 5 },
+      //solution: "public static double CelsiusToFahrenheit(double c) => (c * 9 / 5) + 32;",
+      codesnippet: "",
+      solutions: ["public static double CelsiusToFahrenheit(double c) => (c * 9 / 5) + 32;"],
+      rewards: { xp: 10, coins: 5 },
     },
 
     // 🟡 MEDIUM CHALLENGES
@@ -39,25 +41,28 @@ async function seedChallenges() {
       title: "Find the Largest Number",
       description: "Write a function that returns the largest number in an array.",
       difficulty: "Medium",
-      codesnippet: "function maxNumber(arr) { return Math.max(...arr); }",
-      solutions: ["function maxNumber(arr) { return Math.max(...arr); }"],
-      rewards: { rupees: 20, xp: 10 },
+      codesnippet: "",
+      //solution: "public static int MaxNumber(int[] arr) => arr.Max();",
+      solutions: ["public static int MaxNumber(int[] arr) => arr.Max();"],
+      rewards: { xp: 20, coins: 10 },
     },
     {
       title: "Reverse a String",
       description: "Write a function that reverses a given string.",
       difficulty: "Medium",
-      codesnippet: 'function reverseString(str) { return str.split("").reverse().join(""); }',
-      solutions: ['function reverseString(str) { return str.split("").reverse().join(""); }'],
-      rewards: { rupees: 20, xp: 10 },
+      codesnippet: "",
+      //solution: "public static string ReverseString(string str) => new string(str.Reverse().ToArray());",
+      solutions: ["public static string ReverseString(string str) => new string(str.Reverse().ToArray());"],
+      rewards: { xp: 20, coins: 10 },
     },
     {
       title: "Find Factorial",
       description: "Write a function to find the factorial of a number.",
       difficulty: "Medium",
-      codesnippet: "function factorial(n) { return n <= 1 ? 1 : n * factorial(n - 1); }",
-      solutions: ["function factorial(n) { return n <= 1 ? 1 : n * factorial(n - 1); }"],
-      rewards: { rupees: 20, xp: 10 },
+      codesnippet: "",
+      //solution: "public static int Factorial(int n) => n <= 1 ? 1 : n * Factorial(n - 1);",
+      solutions: ["public static int Factorial(int n) => n <= 1 ? 1 : n * Factorial(n - 1);"],
+      rewards: { xp: 20, coins: 10 },
     },
 
     // 🔴 HARD CHALLENGES
@@ -65,73 +70,35 @@ async function seedChallenges() {
       title: "Check for Palindrome",
       description: "Write a function to check if a string is a palindrome.",
       difficulty: "Hard",
-      codesnippet: 'function isPalindrome(str) { return str === str.split("").reverse().join(""); }',
-      solutions: ['function isPalindrome(str) { return str === str.split("").reverse().join(""); }'],
-      rewards: { rupees: 50, xp: 20 },
+      //solution: "public static bool IsPalindrome(string str) => str == new string(str.Reverse().ToArray());",
+      codesnippet: "",
+      solutions: ["public static bool IsPalindrome(string str) => str == new string(str.Reverse().ToArray());"],
+      rewards: { xp: 50, coins: 20 },
     },
     {
       title: "Find Prime Numbers in a Range",
       description: "Write a function that returns all prime numbers in a given range.",
       difficulty: "Hard",
-      codesnippet: `
-function findPrimes(start, end) {
-  let primes = [];
-  for (let i = start; i <= end; i++) {
-    if (isPrime(i)) primes.push(i);
-  }
-  return primes;
-}
-function isPrime(n) {
-  if (n < 2) return false;
-  for (let i = 2; i <= Math.sqrt(n); i++) {
-    if (n % i === 0) return false;
-  }
-  return true;
-}`,
+      /*solution:
+        "public static List<int> FindPrimes(int start, int end) { List<int> primes = new List<int>(); for (int i = start; i <= end; i++) { if (IsPrime(i)) primes.Add(i); } return primes; } private static bool IsPrime(int n) { if (n < 2) return false; for (int i = 2; i <= Math.Sqrt(n); i++) { if (n % i == 0) return false; } return true; }",
+        */
+      codesnippet: "",
       solutions: [
-        `
-function findPrimes(start, end) {
-  let primes = [];
-  for (let i = start; i <= end; i++) {
-    if (isPrime(i)) primes.push(i);
-  }
-  return primes;
-}
-function isPrime(n) {
-  if (n < 2) return false;
-  for (let i = 2; i <= Math.sqrt(n); i++) {
-    if (n % i === 0) return false;
-  }
-  return true;
-}`,
+        "public static List<int> FindPrimes(int start, int end) { List<int> primes = new List<int>(); for (int i = start; i <= end; i++) { if (IsPrime(i)) primes.Add(i); } return primes; } private static bool IsPrime(int n) { if (n < 2) return false; for (int i = 2; i <= Math.Sqrt(n); i++) { if (n % i == 0) return false; } return true; }",
       ],
-      rewards: { rupees: 50, xp: 20 },
+      rewards: { xp: 50, coins: 20 },
     },
     {
       title: "Fibonacci Sequence",
       description: "Write a function to generate the first N Fibonacci numbers.",
       difficulty: "Hard",
-      codesnippet: `
-function fibonacci(n) {
-  let fib = [0, 1];
-  for (let i = 2; i < n; i++) {
-    fib.push(fib[i - 1] + fib[i - 2]);
-  }
-  return fib;
-}`,
-      solutions: [
-        `
-function fibonacci(n) {
-  let fib = [0, 1];
-  for (let i = 2; i < n; i++) {
-    fib.push(fib[i - 1] + fib[i - 2]);
-  }
-  return fib;
-}`,
-      ],
-      rewards: { rupees: 50, xp: 20 },
+      //solution: "public static List<int> Fibonacci(int n) { List<int> fib = new List<int> { 0, 1 }; for (int i = 2; i < n; i++) { fib.Add(fib[i - 1] + fib[i - 2]); } return fib; }",
+      codesnippet: "",
+      solutions: ["public static List<int> Fibonacci(int n) { List<int> fib = new List<int> { 0, 1 }; for (int i = 2; i < n; i++) { fib.Add(fib[i - 1] + fib[i - 2]); } return fib; }"],
+      rewards: { xp: 50, coins: 20 },
     },
   ];
+
   try {
     await Challenge.deleteMany({}); // Clear existing challenges
     await Challenge.insertMany(challenges);

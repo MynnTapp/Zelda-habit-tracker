@@ -73,6 +73,7 @@ router.get("/me", authMiddleware, async (req, res) => {
     first_name: req.user.first_name,
     last_name: req.user.last_name,
     email: req.user.email,
+    rupees: req.user.rupees
   });
 });
 

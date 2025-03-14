@@ -2,6 +2,7 @@ const express = require("express");
 const Habit = require("../models/Habit");
 const {authMiddleware} = require("../middleware/authMiddleWare")
 const router = express.Router();
+const { rewardUserWithRupees } = require("../rewarduser");
 
 
 //create habit
@@ -24,6 +25,7 @@ router.post("/habits", authMiddleware, async (req, res) =>{
 } )
 
 //logging habits dates
+//after logging habit, user can ear rupees and add to their level
 
 router.put("/habits/:habitId/complete", authMiddleware, async (req, res) =>{
     const userId = req.user.id;
@@ -46,12 +48,13 @@ if(alreadyCompleted){
 }
 
 habit.completedDates.push(completedDate);
+rewardUserWithRupees(userId);
 await habit.save();
 res.status(200).json({message: "habit completed!", habit})
     } catch (error){
-         const habit = await Habit.findOne({ _id: habitId, userId });
+         //const habit = await Habit.findOne({ _id: habitId, userId });
 
-        console.log(habit.completedDates)
+        //console.log(habit.completedDates)
         res.status(500).json({error: error.message})
     }
 })
