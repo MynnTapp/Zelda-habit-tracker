@@ -12,17 +12,17 @@ async function updateUserMapProgress(userId) {
 
     // Define the map progression and the rupees required to unlock the next map
     const mapProgression = [
-      { map: "Kakiro's village", requiredRupees: 0 },
-      { map: "Forest of Shadows", requiredRupees: 100 },
-      { map: "Mountain of Eternity", requiredRupees: 250 },
-      { map: "Desert of Secrets", requiredRupees: 500 },
-      { map: "Sky City", requiredRupees: 1000 },
+      { map: "Kakiro's village", requiredxp: 0 },
+      { map: "Forest of Shadows", requiredxp: 100 },
+      { map: "Mountain of Eternity", requiredxp: 650 },
+      { map: "Desert of Secrets", requiredxp: 1100 },
+      { map: "Sky City", requiredxp: 2500 },
     ];
 
     // Check the user's current rupees and determine the map progress
     let newMap = "Kakiro's village"; // Default map
     for (let i = mapProgression.length - 1; i >= 0; i--) {
-      if (user.rupees >= mapProgression[i].requiredRupees) {
+      if (user.rupees >= mapProgression[i].requiredxp) {
         newMap = mapProgression[i].map;
         break;
       }

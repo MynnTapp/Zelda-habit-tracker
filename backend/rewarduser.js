@@ -10,7 +10,8 @@ const { updateUserMapProgress } = require("./updatemapprogress");
     return;
   }
 
-  user.rupees += 10;
+  user.rupees += 5;
+  user.xp += 10
   await user.save();
 
   // Now update the user's map based on the new rupees total

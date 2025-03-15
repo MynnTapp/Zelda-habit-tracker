@@ -7,7 +7,6 @@ const HabitSchema = new mongoose.Schema({
   frquency: {type: String, enum: ["Daily", "Weekly", "Monthly"]},
   completedDates: [Date],
   streak: {type: Number, default: 0},
-  rewards: {rupees: Number, xp: Number},
   createdAt: {type: Date, default: Date.Now}
 });
 

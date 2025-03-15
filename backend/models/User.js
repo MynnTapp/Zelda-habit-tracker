@@ -10,6 +10,7 @@ const UserSchema = new mongoose.Schema(
     role: { type: String, enum: ["user", "admin"], default: "user" },
     rupees: { type: Number, default: 0 },
     hearts: { type: Number, default: 3 },
+    xp: {type: Number, default: 0},
     inventory: [String],
     streak: { type: Number, default: 0 },
     mapProgress: { type: String, default: "Kakiro's village" },
