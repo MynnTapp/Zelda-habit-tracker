@@ -15,6 +15,6 @@ const ChallengeSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
 });
 
-//after user completes challenge, they should earn rupees (by ten)
+
 
 module.exports = mongoose.model("Challenge", ChallengeSchema);
