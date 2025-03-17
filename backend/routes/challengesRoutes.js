@@ -71,6 +71,70 @@ router.get("/challenge/medium/:challengeId", authMiddleware, async (req, res) =>
     }
 })
 
+router.get("/challenge/hard/:challengeId", authMiddleware, async (req, res) =>{
+    const {challengeId} = req.params;
+    const challenge = await Challenge.findOne({difficulty: "Hard", _id: challengeId});
+    try{
+        if(!challenge){
+            res.status(400).json({message: "challenge does not exist"});
+        }
+        res.status(200).json({title: challenge.title, question: challenge.description})
+    } catch(err){
+        res.status(500).json({message: "could not retrieve challenge", error: err.message});
+    }
+})
+
+
+router.post("/challenge/create", adminMiddleware, async (req, res) =>{
+
+    try{
+        const challenge = new Challenge({
+            title: req.body.title,
+            description: req.body.description,
+            difficulty: req.body.difficulty
+        })
+        await challenge.save();
+        res.status(201).json(challenge);
+    } catch(err){
+        res.status(500).json({message: "could not create habit", error: err.message});
+    }
+
+    
+
+})
+
+router.put("/challenge/edit/:challengeId", adminMiddleware, async (req, res) =>{
+    const {challengeId} = req.params;
+   const updatedData = req.body;
+
+   try{
+    const updatedChallenge = await Challenge.findByIdAndUpdate(challengeId, updatedData, {
+        new: true,
+        runValidators: true
+    })
+    if(!updatedChallenge){
+        return res.status(400).json({message: "Challenge not found"})
+    }
+    res.status(200).json(updatedChallenge)
+   } catch (err){
+    res.status(500).json({message: "Could not update challenge", message: err.message})
+   }
+})
+
+
+router.delete("/challenge/:challengeId", adminMiddleware, async (req, res) =>{
+    const {challengeId} = req.params
+    try{
+        const challenge = await Challenge.deleteOne({_id: challengeId});
+        if(!challenge){
+            return res.status(404).json({message: "Challenge not found"})
+        }
+        res.status(200).json({message: "challenge successfully deleted"})
+    } catch (err) {
+        res.status(500).json({message: "could not delete challenge", error: err.message});
+    }
+})
+
 module.exports = router
 
 
