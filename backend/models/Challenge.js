@@ -8,6 +8,7 @@ const ChallengeSchema = new mongoose.Schema({
   codesnippet: { type: String, default: "" },
   solutions: { type: [String], required: true }, // Approved solutions
   pendingSolutions: { type: [String], default: [] }, // Solutions waiting for admin approval
+  testCases: {type: [{ input: [mongoose.Schema.Types.Mixed], expected: mongoose.Schema.Types.Mixed }], default: [] },
   rewards: {
     rupees: { type: Number, default: 0 },
     xp: { type: Number, default: 0 },
