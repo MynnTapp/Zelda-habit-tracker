@@ -2,6 +2,8 @@ const express = require("express");
 const { authMiddleware, adminMiddleware } = require("../middleware/authMiddleWare");
 const Challenge = require("../models/Challenge");
 const router = express.Router();
+const testCodeSnippet = require("../tests/code-tester")
+
 
 router.get("/challenge/easy", authMiddleware, async (req, res) =>{
     const challenge = await Challenge.find({ difficulty: "Easy" });
@@ -134,6 +136,44 @@ router.delete("/challenge/:challengeId", adminMiddleware, async (req, res) =>{
         res.status(500).json({message: "could not delete challenge", error: err.message});
     }
 })
+
+router.post("/challenge/:challengeId/submit", authMiddleware, async (req, res) =>{
+    const {challengeId} = req.params;
+    const {codesnippet} = req.body;
+
+    try{
+        const challenge = await Challenge.findById({_id: challengeId});
+        if(!challenge){
+            return res.status(404).json({message: "challenge not found"});
+        }
+
+        
+    if(!codesnippet || codesnippet.trim() == ""){
+        return res.status(400).json({message: "cannot leave codensippet blank"});
+    }
+
+    const {testCases} = challenge;
+
+    if(!testCases || testCases.length === 0){
+        return res.status(400).json({message: "there are no test cases for this problem."})
+    }
+    const isValid = testCodeSnippet(codesnippet, testCases);
+    if(isValid){
+        if(!challenge.solutions.includes(codesnippet)){
+            challenge.solutions.push(codesnippet);
+        }
+        challenge.codesnippet = "";
+        await challenge.save();
+        return res.status(200).json({message: "Correct!"});
+    } else{
+        return res.status(400).json({message: "incorrect, code has failed the test"});
+    }
+    } catch (err){
+        res.status(500).json({message: "there was an error submitting the question", error: err.message})
+    }
+    
+})
+
 
 module.exports = router
 
