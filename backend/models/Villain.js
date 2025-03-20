@@ -1,12 +1,12 @@
 const mongoose = require("mongoose");
 
 
-const VillainSchema = new mongoose({
+const VillainSchema = new mongoose.Schema({
   name: String,
   location: String,
   hp: Number,
   attackPower: Number,
-  challengeId: { type: mongoose.Schema.Types.ObjectId, ref: "Challenge" },
+  difficulty: { type: String, enum: ["Easy", "Medium", "Hard"], required: true },
 });
 
 module.exports = mongoose.model("Villain", VillainSchema);
