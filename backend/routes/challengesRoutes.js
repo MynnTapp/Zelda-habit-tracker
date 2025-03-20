@@ -3,7 +3,11 @@ const { authMiddleware, adminMiddleware } = require("../middleware/authMiddleWar
 const Challenge = require("../models/Challenge");
 const router = express.Router();
 const testCodeSnippet = require("../tests/code-tester")
-const getVilliansForChallenge = require("../Villains/GetVillainsforchallenge")
+const getVilliansForChallenge = require("../Villains/GetVillainsforchallenge");
+const gainXp = require("../combat");
+const loseXp = require("../combat");
+const Villain = require("../models/Villain")
+const rewardUserWithRupees = require("../rewarduser");
 
 
 router.get("/challenge/easy", authMiddleware, async (req, res) =>{
@@ -141,13 +145,14 @@ router.delete("/challenge/:challengeId", adminMiddleware, async (req, res) =>{
     }
 })
 
-router.post("/challenge/:challengeId/submit", authMiddleware, async (req, res) =>{
-    const {challengeId} = req.params;
+router.post("/challenge/:challengeId/:villainId/submit", authMiddleware, async (req, res) =>{
+    const {challengeId, villainId} = req.params;
     const {codesnippet} = req.body;
     const userId = req.user.id
 
     try{
         const challenge = await Challenge.findById({_id: challengeId});
+        const villain = await Villain.findById({_id: villainId});
         if(!challenge){
             return res.status(404).json({message: "challenge not found"});
         }
@@ -169,9 +174,13 @@ router.post("/challenge/:challengeId/submit", authMiddleware, async (req, res) =
         }
         rewardUserWithRupees(userId);
         challenge.codesnippet = "";
+        console.log(villain);
+        villain.hp -= 5;
+        await villain.save();
         await challenge.save();
         return res.status(200).json({message: "Correct!"});
     } else{
+        loseXp(userId);
         return res.status(400).json({message: "incorrect, code has failed the test"});
     }
     } catch (err){

@@ -18,4 +18,4 @@ const { updateUserMapProgress } = require("./updatemapprogress");
   await updateUserMapProgress(userId);
 }
 
-module.exports = {rewardUserWithRupees}
+module.exports = rewardUserWithRupees

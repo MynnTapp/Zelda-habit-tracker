@@ -8,6 +8,7 @@ const connectDB = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
 const habitRoutes = require("./routes/habitRoutes")
 const challengesRoutes = require("./routes/challengesRoutes")
+const villainRoutes = require("./routes/VillainRoute");
 
 const app = express();
 
@@ -20,6 +21,7 @@ app.use(cookieParser());
 app.use("/api/auth", authRoutes);
 app.use("/api/auth", habitRoutes);
 app.use("/api/auth", challengesRoutes);
+app.use("/api/auth", villainRoutes);
 
 // Connect to MongoDB
 connectDB();
