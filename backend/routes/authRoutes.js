@@ -186,4 +186,48 @@ router.get("/admin/me", adminMiddleware, async (req, res) =>{
   }
 })
 
+router.put("/:userId/edit", authMiddleware, async (req, res) =>{
+  const {userId} = req.params;
+  const updatedData = req.body
+
+  try{
+    const updatedUser = await User.findByIdAndUpdate(userId, updatedData, {
+      new: true,
+      runValidators: true
+    });
+    if(!updatedUser){
+      return res.status(404).json({message: "no user found!"})
+    }
+    res.status(200).json(updatedUser)
+  } catch(err){
+    res.status(500).json({message: "could not update user", error: err.message})
+  }
+});
+
+router.delete("/users/:userId", adminMiddleware, async (req, res) =>{
+  const {userId} = req.params;
+  try{
+    const user = await User.deleteOne({_id: userId});
+    if(!user){
+      res.status(404).json({message: "user not found"});
+    }
+    res.status(200).json({message: "user successfully deleted"});
+  } catch(err){
+    res.status(500).json({message: "could not delete user", error: err.message});
+  }
+});
+
+router.get("/users", adminMiddleware, async (req, res) =>{
+  try{
+    const users = await User.find();
+    if(!users){
+      res.status(404).json({message: "users not found"});
+    }
+    res.status(200).json(users)
+  } catch (err){
+    res.status(500).json({message: "could not fetch users", error: err.message});
+  }
+})
+
+
 module.exports = router;

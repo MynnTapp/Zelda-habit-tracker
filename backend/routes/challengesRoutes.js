@@ -4,7 +4,6 @@ const Challenge = require("../models/Challenge");
 const router = express.Router();
 const testCodeSnippet = require("../tests/code-tester")
 const getVilliansForChallenge = require("../Villains/GetVillainsforchallenge");
-const gainXp = require("../combat");
 const loseXp = require("../combat");
 const Villain = require("../models/Villain")
 const rewardUserWithRupees = require("../rewarduser");
