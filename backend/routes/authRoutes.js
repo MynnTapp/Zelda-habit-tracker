@@ -8,7 +8,40 @@ const {blacklistedTokens, userblacklistedTokens} = require("../blacklistedtokens
 
 const router = express.Router();
 
-
+/**
+ * @swagger
+ * /api/register:
+ *   post:
+ *     summary: Register a new user
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               username:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *               first_name:
+ *                 type: string
+ *               last_name:
+ *                 type: string
+ *             example:
+ *               username: "testuser"
+ *               email: "test@employer.com"
+ *               password: "test1234"
+ *               first_name: "Test"
+ *               last_name: "User"
+ *     responses:
+ *       201:
+ *         description: User registered successfully
+ *       400:
+ *         description: User already exists
+ */
 
 // Register User
 router.post("/register", async (req, res) => {
@@ -29,11 +62,64 @@ router.post("/register", async (req, res) => {
 
     res.status(201).json({ message: "User registered successfully" });
   } catch (error) {
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 });
 
 // Login User
+/**
+ * @swagger
+ * /api/login:
+ *   post:
+ *     summary: Login and get JWT token
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *             example:
+ *               email: "test@employer.com"
+ *               password: "test1234"
+ *     responses:
+ *       200:
+ *         description: Returns user data + HTTP-only cookie
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: "Login successful"
+ *               user: { id: "123", email: "test@employer.com", username: "testuser" }
+ *       400:
+ *         description: Invalid credentials
+ */
+
+//////////////////////login///
+/**
+ * @swagger
+ * /api/me:
+ *   get:
+ *     summary: Get current user profile (protected)
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Returns user data
+ *         content:
+ *           application/json:
+ *             example:
+ *               userId: "123"
+ *               username: "testuser"
+ *               email: "test@employer.com"
+ *       401:
+ *         description: Unauthorized (missing/invalid token)
+ */
+
+
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -94,6 +180,34 @@ router.post("/logout", authMiddleware, (req, res) => {
   res.json({ message: "user logged out successfully" });
 });
 
+
+//admin-login
+
+/**
+ * @swagger
+ * /api/admin/login:
+ *   post:
+ *     summary: Admin login (returns JWT)
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *             example:
+ *               email: "admin@test.com"
+ *               password: "admin123"
+ *     responses:
+ *       200:
+ *         description: Returns admin token
+ *       404:
+ *         description: Admin not found
+ */
 
 router.post("/admin/login", async (req, res) => {
 
@@ -186,6 +300,40 @@ router.get("/admin/me", adminMiddleware, async (req, res) =>{
   }
 })
 
+//update user
+
+/**
+ * @swagger
+ * /api/{userId}/edit:
+ *   put:
+ *     summary: Update user profile (protected)
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               first_name:
+ *                 type: string
+ *               last_name:
+ *                 type: string
+ *             example:
+ *               first_name: "UpdatedName"
+ *     responses:
+ *       200:
+ *         description: User updated
+ *       404:
+ *         description: User not found
+ */
+
 router.put("/:userId/edit", authMiddleware, async (req, res) =>{
   const {userId} = req.params;
   const updatedData = req.body
@@ -217,6 +365,22 @@ router.delete("/users/:userId", adminMiddleware, async (req, res) =>{
   }
 });
 
+//get all users
+
+/**
+ * @swagger
+ * /api/users:
+ *   get:
+ *     summary: Get all users (admin-only)
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: List of all users
+ *       403:
+ *         description: Forbidden (non-admin token)
+ */
+
 router.get("/users", adminMiddleware, async (req, res) =>{
   try{
     const users = await User.find();
@@ -228,6 +392,39 @@ router.get("/users", adminMiddleware, async (req, res) =>{
     res.status(500).json({message: "could not fetch users", error: err.message});
   }
 })
+
+//Edge-cases (wrong login)
+
+/**
+ * @swagger
+ * /api/login:
+ *   post:
+ *     ...
+ *     responses:
+ *       400:
+ *         description: Invalid credentials
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: "Invalid credentials"
+ */
+
+//protected-route without token
+
+/**
+ * @swagger
+ * /api/me:
+ *   get:
+ *     ...
+ *     responses:
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: "No token provided"
+ */
+
 
 
 module.exports = router;
