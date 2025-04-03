@@ -57,18 +57,25 @@ app.use((req, res, next) => {
   next();
 });
 
+// Test endpoint for Swagger verification
 /**
  * @swagger
  * /api/ping:
  *   get:
+ *     tags: [Testing]
  *     summary: Test API connection
+ *     description: Returns a simple response to verify the API is working
  *     responses:
  *       200:
  *         description: Successful ping
  *         content:
  *           application/json:
- *             example:
- *               message: "pong"
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "pong"
  */
 app.get('/api/ping', (req, res) => {
   res.status(200).json({ message: "pong" });
