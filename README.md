@@ -89,7 +89,8 @@ password: admin89
 
 **Interactive Docs:**  
 [Swagger UI](https://your-api-name.onrender.com/api-docs)  
-![Swagger Preview](https://swagger.io/swagger-ui/assets/images/swagger-ui-bundle.png)
+![Swagger Preview](![Screenshot (110)](https://github.com/user-attachments/assets/80d4f006-3be9-412e-be09-37fd6a99d3b9)
+)
 
 **Postman Collection:**  
 [Download Collection](link-to-postman-export) *(optional)*
