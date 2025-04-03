@@ -23,7 +23,7 @@ const options = {
     },
     servers: [
       {
-        url: "https://zelda-habit-tracker.onrender.com", // Update with your Render URL
+        url: "https://zelda-habit-tracker.onrender.com/api", // Update with your Render URL
       },
     ],
   },
@@ -81,7 +81,7 @@ app.get('/api/ping', (req, res) => {
   res.status(200).json({ message: "pong" });
 });
 // Routes
-app.use("/api/auth", authRoutes);
+app.use("/api", authRoutes);
 app.use("/api/auth", habitRoutes);
 app.use("/api/auth", challengesRoutes);
 app.use("/api/auth", villainRoutes);
