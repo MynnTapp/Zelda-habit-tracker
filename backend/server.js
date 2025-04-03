@@ -31,13 +31,48 @@ const options = {
 };
 
 const specs = swaggerJsdoc(options);
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
+app.use(
+  "/api-docs",
+  swaggerUi.serve,
+  swaggerUi.setup(specs, {
+    swaggerOptions: {
+      defaultModelsExpandDepth: -1,
+      docExpansion: "none",
+      persistAuthorization: true,
+      displayRequestDuration: true,
+    },
+    customSiteTitle: "Zelda Habit Tracker API Docs",
+    explorer: true,
+  })
+);
+
+
 
 // Middleware
 app.use(express.json());
-app.use(cors({ credentials: true, origin: "http://localhost:5173" })); // Update origin for frontend
+app.use(cors({ credentials: true, origin:"https://zelda-habit-tracker.onrender.com" })); // Update origin for frontend
 app.use(cookieParser());
+app.use((req, res, next) => {
+  res.header("Content-Type", "application/json");
+  next();
+});
 
+/**
+ * @swagger
+ * /api/ping:
+ *   get:
+ *     summary: Test API connection
+ *     responses:
+ *       200:
+ *         description: Successful ping
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: "pong"
+ */
+app.get('/api/ping', (req, res) => {
+  res.status(200).json({ message: "pong" });
+});
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/auth", habitRoutes);
