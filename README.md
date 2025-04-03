@@ -8,7 +8,7 @@ A game-based learning platform where users:
 - Build habits to earn rewards 💰
 - Track progress through XP systems 🏆
 
-## 🌐 API Base URL:
+## 🌐 API Base URL: https://zelda-habit-tracker.onrender.com
 
 
 
