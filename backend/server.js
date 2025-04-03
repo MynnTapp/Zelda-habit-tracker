@@ -1,3 +1,4 @@
+
 const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
@@ -6,147 +7,93 @@ const swaggerJsdoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
 
 const authRoutes = require("./routes/authRoutes");
-const habitRoutes = require("./routes/habitRoutes");
-const challengesRoutes = require("./routes/challengesRoutes");
+const habitRoutes = require("./routes/habitRoutes")
+const challengesRoutes = require("./routes/challengesRoutes")
 const villainRoutes = require("./routes/VillainRoute");
 
 const app = express();
 
-// ==============================================
-// 1. Enhanced Swagger Configuration
-// ==============================================
 const options = {
   definition: {
     openapi: "3.0.0",
     info: {
-      title: "Zelda Habit Tracker API",
+      title: "Zelda-habit-tracker",
       version: "1.0.0",
-      description: "Interactive API Documentation",
+      description: "API documentation for employers to test routes",
     },
     servers: [
       {
-        url: "https://zelda-habit-tracker.onrender.com",
-        description: "Production server",
-      },
-      {
-        url: `http://localhost:${process.env.PORT || 5300}`,
-        description: "Local development",
+        url: "https://zelda-habit-tracker.onrender.com", // Update with your Render URL
       },
     ],
-    components: {
-      securitySchemes: {
-        bearerAuth: {
-          type: "http",
-          scheme: "bearer",
-          bearerFormat: "JWT",
-        },
-      },
-    },
   },
-  apis: ["./routes/*.js"],
+  apis: ["./routes/*.js"], // Path to your route files
 };
 
 const specs = swaggerJsdoc(options);
-
-// ==============================================
-// 2. Critical Middleware Fixes
-// ==============================================
-app.use(express.json());
-app.use(cookieParser());
-
-// Enhanced CORS configuration
-app.use(
-  cors({
-    credentials: true,
-    origin: [
-      "https://zelda-habit-tracker.onrender.com",
-      "http://localhost:5173", // For future frontend
-    ],
-  })
-);
-
-// Response headers middleware (fixed)
-app.use((req, res, next) => {
-  res.header("Content-Type", "application/json; charset=utf-8");
-  res.header("Access-Control-Allow-Credentials", "true");
-  next();
-});
-
-// ==============================================
-// 3. Swagger UI Setup (Fixed)
-// ==============================================
 app.use(
   "/api-docs",
   swaggerUi.serve,
   swaggerUi.setup(specs, {
     swaggerOptions: {
-      defaultModelsExpandDepth: 0,
-      docExpansion: "list",
+      defaultModelsExpandDepth: -1,
+      docExpansion: "none",
       persistAuthorization: true,
       displayRequestDuration: true,
-      tryItOutEnabled: true,
     },
-    customCss: ".swagger-ui .topbar { display: none }",
-    customSiteTitle: "Zelda API Docs",
+    customSiteTitle: "Zelda Habit Tracker API Docs",
+    explorer: true,
   })
 );
 
-// ==============================================
-// 4. Test Endpoints (Verify First)
-// ==============================================
+
+
+// Middleware
+app.use(express.json());
+app.use(cors({ credentials: true, origin:"https://zelda-habit-tracker.onrender.com" })); // Update origin for frontend
+app.use(cookieParser());
+app.use((req, res, next) => {
+  res.header("Content-Type", "application/json");
+  next();
+});
+
+// Test endpoint for Swagger verification
 /**
  * @swagger
- * /api/healthcheck:
+ * /api/ping:
  *   get:
- *     tags: [System]
- *     summary: Service health check
+ *     tags: [Testing]
+ *     summary: Test API connection
+ *     description: Returns a simple response to verify the API is working
  *     responses:
  *       200:
- *         description: API is healthy
+ *         description: Successful ping
  *         content:
  *           application/json:
- *             example: { status: "OK", timestamp: "2023-07-20T12:00:00Z" }
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "pong"
  */
-app.get("/api/healthcheck", (req, res) => {
-  res.status(200).json({
-    status: "OK",
-    timestamp: new Date().toISOString(),
-  });
+app.get('/api/ping', (req, res) => {
+  res.status(200).json({ message: "pong" });
 });
-
-// ==============================================
-// 5. Route Configuration (Fixed)
-// ==============================================
-// Fixed route prefixes (don't put all under /api/auth)
+// Routes
 app.use("/api/auth", authRoutes);
-app.use("/api/habits", habitRoutes);
-app.use("/api/challenges", challengesRoutes);
-app.use("/api/villains", villainRoutes);
+app.use("/api/auth", habitRoutes);
+app.use("/api/auth", challengesRoutes);
+app.use("/api/auth", villainRoutes);
 
-// ==============================================
-// 6. Error Handling Middleware (Crucial)
-// ==============================================
-app.use((err, req, res, next) => {
-  console.error("⚠️ Error:", err.stack);
-  res.status(500).json({
-    error: "Internal Server Error",
-    message: err.message,
-    ...(process.env.NODE_ENV === "development" && { stack: err.stack }),
-  });
+// Connect to MongoDB
+connectDB();
+
+app.get("/", (req, res) => {
+  //seedAdmins();
+  res.send("API is running...");
 });
 
-// ==============================================
-// 7. Database & Server Startup
-// ==============================================
-connectDB()
-  .then(() => {
-    const PORT = process.env.PORT || 5300;
-    app.listen(PORT, () => {
-      console.log(`🚀 Server running on port ${PORT}`);
-      console.log(`📚 API Docs: http://localhost:${PORT}/api-docs`);
-    });
-  })
-  .catch((err) => {
-    console.error("💥 Failed to connect to DB:", err);
-    process.exit(1);
-  });
+
+const PORT = process.env.PORT || 5300;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
