@@ -271,6 +271,26 @@ router.get("/me", authMiddleware, async (req, res) => {
   });
 });
 
+router.post("/admin/logout", adminMiddleware, (req, res) => {
+  // if (token) {
+  //   blacklistedTokens.add(token); // Add token to the blacklist
+  // }
+
+  // res.json({ message: "Admin Logged out successfully" });
+
+  const token = req.header("Authorization")?.replace("Bearer ", "");
+
+  if (!token) {
+    return res.status(400).json({ message: "No token provided" });
+  }
+
+  blacklistedTokens.add(token); // Add token to blacklist
+  console.log("Blacklisted Tokens:", blacklistedTokens); // Debugging
+
+  res.clearCookie("token"); // Ensure token is removed from cookies
+  res.json({ message: "Admin logged out successfully" });
+});
+
 // [Additional endpoints with similar Swagger documentation...]
 
 module.exports = router;
