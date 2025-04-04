@@ -122,6 +122,9 @@ Postman is **required** for all interactions and testing.
 
 postman-link: https://api.postman.com/collections/38315964-fbd7a330-8fce-46e8-a3b4-d10bf85741ed?access_key=PMAT-01JR0ZJ57ZAVPCFPXVC5CEJZTE
 
+1. Download link
+2. import it into postman to use the collection
+
 
 ## 🛠️ Tech Stack
 
