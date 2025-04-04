@@ -293,4 +293,22 @@ router.post("/admin/logout", adminMiddleware, (req, res) => {
 
 // [Additional endpoints with similar Swagger documentation...]
 
+
+router.post("/logout", authMiddleware, (req, res) => {
+  const token = req.header("Authorization")?.replace("Bearer ", "");
+
+  if (!token) {
+    return res.status(400).json({ message: "No token provided" });
+  }
+
+  userblacklistedTokens.add(token); // Add token to blacklist
+  console.log("Blacklisted Tokens:", userblacklistedTokens); // Debugging
+
+  res.clearCookie("token"); // Ensure token is removed from cookies
+  res.json({ message: "user logged out successfully" });
+});
+ 
+ 
+
+
 module.exports = router;
