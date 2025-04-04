@@ -137,7 +137,7 @@ postman-link: https://api.postman.com/collections/38315964-fbd7a330-8fce-46e8-a3
 
 ## 💡 Game Mechanics & Logic
 
-- 🗡️ Villains lose **5 HP** per correct challenge
+- 🗡️ Villains gain **5 HP** per correct challenge
 - 📆 Completing a habit rewards:
   - 💰 **10 Rupees**
   - 🏆 **20 XP**
